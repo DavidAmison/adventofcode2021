@@ -1,4 +1,4 @@
-use utils::{files, parse_field};
+use utils::{files};
 
 fn main() {
     let filename = "src/input.txt";
