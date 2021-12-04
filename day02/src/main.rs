@@ -20,7 +20,7 @@ fn main() {
     for line in lines.iter() {
         match parse_field!(&line => Direction, " " | i32, "") {
             (Some(d), Some(x)) => sub2.execute_instruction(d, x),
-            (i) => println!("Instuction {:?} not recognized", i),
+            i => println!("Instuction {:?} not recognized", i),
         };
     }
     println!("FINAL POSITION: {:?}", sub2);
