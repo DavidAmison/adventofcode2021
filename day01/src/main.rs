@@ -50,38 +50,31 @@ use utils::files;
 
 fn main() {
     let values = files::read_in_lines_as::<u32>("src/input.txt");
+    let fold_compare = |count, (x, y)| {
+        count + if x > y { 1 } else { 0 }
+    };
 
     println!("\n----- PART 1 -----\n");
 
-    {
-        let mut last_value = values[0];
-        let mut depth_increase_count = 0;
-        for value in values[1..].iter() {
-            if *value > last_value {
-                depth_increase_count += 1;
-            }
-            last_value = *value;
-        }
+        // Concise solution
+        let depth_increase_count = values[1..].iter()
+            .zip(values[0..].iter())
+            .fold(0, fold_compare);
+
         println!("Depth increased {} times", depth_increase_count);
-    }
 
     println!("\n----- PART 2 -----\n");
     {
-        let mut last_sum = 0;  // keeping track of the sliding sum
-        let mut depth_increase_count = 0;
-        let number_of_measurements = values.len();
-        for i in 0..number_of_measurements {
-            // Building first sum
-            if i < 3 {
-                last_sum += values[i];
-            } else {
-                let next_sum = last_sum + values[i] - values[i-3];
-                if next_sum > last_sum {
-                    depth_increase_count += 1;
-                }
-                last_sum = next_sum;
-            }
-        }
+        // More concise - we actually repeat the process for part 1 but
+        // comparing points offset by 3. Why? Consider:
+        // [a, b, c, d] -> [a + b + c, b + c + d]
+        // (a + b + c) < (b + c + d) -> a < d
+        // Basically - even though we 'average' things we are still only actually comparing
+        // two elements.
+        let depth_increase_count = values[3..].iter()
+            .zip(values[0..].iter())
+            .fold(0, fold_compare);
+
         println!("Depth increased {} times with sum", depth_increase_count);
     }
 }
