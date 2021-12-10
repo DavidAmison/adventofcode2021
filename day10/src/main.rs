@@ -1,6 +1,4 @@
-use utils::{files, parse_field_unwrap};
-
-type Fields = (String,);
+use utils::{files};
 
 fn open_to_close(c: char) -> char {
     match c {
@@ -32,28 +30,21 @@ fn score_char_p2(c: char) -> u128 {
     }
 }
 
-
 fn main() {
     let filename = "input";
     let input = files::read_in_matrix(filename);
 
     println!("----- PART 1 -----");
-    // Closure for filter
-    let filter = |f: &Fields| -> bool {
-        // DO SOMETHING
-        true
-    };
-
-    // Closure for fold
-    let fold = |acc: (u32, Vec<char>), c: &char| -> (u32, Vec<char>) {
-        // DO SOMETHING
+    // Search for syntax errors storing the syntax error score
+    // and the unclosed  blocks
+    let check_syntax = |acc: (u32, Vec<char>), c: &char| -> (u32, Vec<char>) {
         let mut acc = acc.clone();
         if "({[<".contains(*c) {
             acc.1.push(*c);
         } else if ")}]>".contains(*c) {
             if let Some(open) = acc.1.last() {
                 if open_to_close(*open) != *c {
-                    println!("Found illegal {}, expected {}", c, open_to_close(*open));
+                    // Only score first illegal character
                     if acc.0 == 0 {
                         acc.0 = score_char_p1(*c);
                     }
@@ -66,25 +57,37 @@ fn main() {
         acc
     };
 
-    let output: Vec<(u32, Vec<char>)> = input.iter()
-        .map(|chars| chars.iter().fold((0, Vec::new()), fold))
-        .collect();
+    let syntax_checked: Vec<(u32, Vec<char>)> = input.iter()
+        .map(
+            |chars| chars.iter().fold((0, Vec::new()), check_syntax)  // Check syntax
+        ).collect();
 
-    let answer = output.iter().fold(0, |acc, (score, _)| acc + score);
+    let answer = syntax_checked.iter()
+        .fold(0, |acc, (score, _)| acc + score);  // Sum all syntax error scores
     println!("Part 1 Answer: {:?}", answer);
 
     println!("\n\n----- PART 2 -----");
-    let mut scores: Vec<u128> = output.iter()
-        .filter(|l| l.0 == 0)
-        .map(|(_, chars)| chars.iter().rev().fold(0 as u128, |acc, c| acc * 5 + score_char_p2(*c)))
-        .collect();
-        // .fold(0, |acc, score| acc + score);
+    // Calculate score to autocomplete the line:
+    //
+    // The score is determined by considering the completion string
+    // character-by-character. Start with a total score of 0. Then,
+    // for each character, multiply the total score by 5 and then
+    // increase the total score by the point value given for the
+    // character;
+    let autocomplete_score = |(_, chars): &(_, Vec<char>)| {
+        chars.iter()
+            .rev()
+            .fold(0, |acc, c| acc * 5 + score_char_p2(*c))
+    };
 
+    let mut scores: Vec<u128> = syntax_checked.iter()
+        .filter(|l| l.0 == 0)           // Only lines with 0 sytax error score
+        .map(autocomplete_score)        // Calculate the score to autocomplete the line
+        .collect();
+
+    // Get the 'middle' score
     scores.sort();
     let answer = scores[scores.len()/2];
 
-    // for i in answer {
-    //     println!("{:?}", i);
-    // }
     println!("Part 2 Answer: {}", answer);
 }
