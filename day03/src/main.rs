@@ -2,12 +2,7 @@ use utils::{files};
 
 fn main() {
     let filename = "src/input.txt";
-    // let lines = files::read_in_lines(filename);
-    // let lines2 = files::read_in_lines_as::<u32>(filename);
-    // let matrix = files::read_in_matrix(filename);
     let matrix = files::read_in_matrix_as::<u32>(filename);
-    // let data = files::read_in_chunks_to_map(filename, " ", ":");
-
     let report_length = matrix.len();
     let num_length = matrix[0].len();
     let mut sums: Vec<u32> = vec!(0; num_length);
