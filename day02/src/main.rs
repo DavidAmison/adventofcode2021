@@ -4,7 +4,19 @@ use sub::{Direction, Position1, Position2};
 
 fn main() {
     let lines = utils::files::read_in_lines("src/instructions.txt");
+
+
     println!("----- PART 1 -----");
+    // let p = lines.iter()
+    //     .map(|l| parse_field!(l => String, " " | i32, ""))
+    //     .fold((0, 0, 0), |p, (s, x)| match s.unwrap().as_str() {
+    //         "forward" => (p.0 + x.unwrap(), p.1 + x.unwrap()*p.2, p.2),
+    //         "up" => (p.0, p.1, p.2 - x.unwrap()),
+    //         "down" => (p.0, p.1, p.2 + x.unwrap()),
+    //         _ => (p.0, p.1, p.2),
+    //     });
+    // println!("p=>{:?}", p);
+
     let mut sub1 = Position1::new();
     for line in lines.iter() {
         match parse_field!(&line => Direction, " " | i32, "") {
