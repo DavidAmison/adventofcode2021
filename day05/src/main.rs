@@ -103,8 +103,47 @@ impl std::str::FromStr for Line {
     }
 }
 
+fn generate_points(x0: u32, y0: u32, x1: u32, y1: u32) -> Vec<(i32, i32)> {
+    let x_iter: i32 = if x0 == x1 { 0 } else if x0 < x1 { 1 } else { -1 };
+    let y_iter: i32 = if y0 == y1 { 0 } else if y0 < y1 { 1 } else { -1 };
+    let mut x = x0 as i32;
+    let mut y = y0 as i32;
+    let mut points = Vec::new();
+    loop {
+        points.push((x, y));
+        if x == x1 as i32 && y == y1 as i32 {
+            break
+        }
+        x += x_iter;
+        y += y_iter;
+    }
+    points
+}
+
 fn main() {
     let filename = "src/input.txt";
+    /*
+    let lines = files::read_in_lines(filename);
+    // Speed Coding ~ 15 minutes
+    let mut points = HashMap::new();
+    for line in lines.iter() {
+        if let (Some(x0), Some(y0), Some(x1), Some(y1)) = parse_field!(line => u32, "," | u32, " -> " | u32, "," | u32, "") {
+            if x0 == x1 || y0 == y1 || true {
+                for p in generate_points(x0, y0, x1, y1) {
+                    let v = points.entry(p).or_insert(0);
+                    *v += 1;
+                }
+            }
+        }
+    }
+
+    let mut count = 0;
+    for (_, v) in points {
+        if v > 1 { count += 1; };
+    }
+    println!("{}", count);
+    */
+
     let lines = files::read_in_lines_as::<Line>(filename);
 
     println!("----- PART 1 -----");
