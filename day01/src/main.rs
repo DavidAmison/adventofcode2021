@@ -56,25 +56,23 @@ fn main() {
 
     println!("\n----- PART 1 -----\n");
 
-        // Concise solution
-        let depth_increase_count = values[1..].iter()
-            .zip(values[0..].iter())
-            .fold(0, fold_compare);
+    // Concise solution
+    let depth_increase_count = values[1..].iter()
+        .zip(values[0..].iter())
+        .fold(0, fold_compare);
 
-        println!("Depth increased {} times", depth_increase_count);
+    println!("Depth increased {} times", depth_increase_count);
 
     println!("\n----- PART 2 -----\n");
-    {
-        // More concise - we actually repeat the process for part 1 but
-        // comparing points offset by 3. Why? Consider:
-        // [a, b, c, d] -> [a + b + c, b + c + d]
-        // (a + b + c) < (b + c + d) -> a < d
-        // Basically - even though we 'average' things we are still only actually comparing
-        // two elements.
-        let depth_increase_count = values[3..].iter()
-            .zip(values[0..].iter())
-            .fold(0, fold_compare);
+    // We actually repeat the process for part 1 but
+    // comparing points offset by 3. Why? Consider:
+    // [a, b, c, d] -> [a + b + c, b + c + d]
+    // (a + b + c) < (b + c + d) -> a < d
+    // Basically - even though we 'average' things we are still only actually comparing
+    // two elements - just with a greater degree of separation.
+    let depth_increase_count = values[3..].iter()
+        .zip(values[0..].iter())
+        .fold(0, fold_compare);
 
-        println!("Depth increased {} times with sum", depth_increase_count);
-    }
+    println!("Depth increased {} times with sum", depth_increase_count);
 }
