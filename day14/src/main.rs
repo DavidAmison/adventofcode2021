@@ -10,6 +10,7 @@ fn main() {
     let template = "FNFPPNKPPHSOKFFHOFOC";
 
     // Find count of character pairs after 1 steps for each rule
+    // HashMap< Pair , HashMap< Pair, Count >>
     let rule_output: HashMap<String, HashMap<(char, char), usize>> = rules.iter().map(|r| {
         // Assume no rule of form AA -> A because I am lazy and know it is true
             (String::from(&r.0), HashMap::from(
@@ -38,12 +39,13 @@ fn main() {
     }
 
     let mut char_count_10 = HashMap::new();
-    char_count_10.insert(template.chars().next().unwrap(), 1);
+    char_count_10.insert(template.chars().next().unwrap(), 1);  // Count the first character
     for ((_, r), count) in pair_count.iter() {
-        let v = char_count_10.entry(*r).or_insert(0);
+        let v = char_count_10.entry(*r).or_insert(0);  // Now only count second character of each pair
         *v += count;
     }
 
+    // Closure used to find the most and least common letter given collection of form [(char, usize) ...]
     let find_most_least = |r: ((char, usize), (char, usize)), (k, v): (&char, &usize)| -> ((char, usize), (char, usize)) {
         if *v > r.0.1 {
             ((*k, *v), (r.1.0, r.1.1))
@@ -60,6 +62,7 @@ fn main() {
 
     println!("\n\n----- PART 2 -----");
 
+    // We already did the first 10 iterations in part 1
     for _ in 10..40 {
         let mut next_pair_count = HashMap::new();
         for (pair, count) in pair_count.iter() {
@@ -72,9 +75,9 @@ fn main() {
     }
 
     let mut char_count_40 = HashMap::new();
-    char_count_40.insert(template.chars().next().unwrap(), 1);
+    char_count_40.insert(template.chars().next().unwrap(), 1);  // Count the first character
     for ((_, r), count) in pair_count.iter() {
-        let v = char_count_40.entry(*r).or_insert(0);
+        let v = char_count_40.entry(*r).or_insert(0);  // Now only count second character of each pair
         *v += count;
     }
 
