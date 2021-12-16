@@ -2,6 +2,17 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::collections::HashMap;
 
+/// Read in a line
+pub fn read_in_line(filename: &str) -> String {
+    let file = File::open(filename).unwrap();
+    let mut reader = BufReader::new(file);
+
+    let mut line = String::new();
+    reader.read_line(&mut line).ok();
+
+    line
+}
+
 /// Read in separated values of line of a file to a vector
 ///
 /// # Arguments
