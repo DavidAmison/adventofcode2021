@@ -135,9 +135,8 @@ fn main() {
 
         games = next_games_p2;
     }
-
-    println!("Part 2 Answer: P1-{} P2-{}", p1_wins, p2_wins);
-
+    println!("P1 WON {} P2 WON {}", p1_wins, p2_wins);
+    println!("Part 2 Answer: {}", if p1_wins > p2_wins { p1_wins } else { p2_wins });
 }
 
 #[derive(Debug, Clone, Copy)]
